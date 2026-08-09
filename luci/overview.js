@@ -29,7 +29,7 @@ function styles() {
 		'.wrqr-card:only-child{grid-column:1/-1}',
 		'.wrqr-ssid{display:block;width:100%;margin:0 0 .25rem;overflow-wrap:anywhere;text-align:center;font-size:1.15rem}',
 		'.wrqr-bands{width:100%;min-height:1.4em;margin:0 0 .8rem;text-align:center;color:var(--text-color-medium,#666);font-size:.85rem}',
-		'.wrqr-code{display:flex;align-items:center;justify-content:center;width:min(100%,220px);margin:0 auto;padding:12px;background:#fff;box-sizing:border-box}',
+		'.wrqr-code{display:flex;align-items:center;justify-content:center;width:220px;max-width:100%;margin:0 auto;padding:12px;background:#fff;box-sizing:border-box}',
 		'.wrqr-code svg{display:block;width:100%;height:auto;margin:0 auto}',
 		'.wrqr-empty{grid-column:1/-1;margin:.5rem 0;text-align:center;color:var(--text-color-medium,#666)}',
 		'@media(max-width:700px){.wrqr-grid{grid-template-columns:minmax(0,1fr);gap:2rem}.wrqr-card{padding:.75rem .25rem}}'
@@ -44,6 +44,8 @@ function card(network) {
 		ecc: 'M',
 		border: 4
 	});
+	svg = svg.replace(/<svg([^>]*) width="([0-9]+)" height="([0-9]+)"/,
+		'<svg$1 viewBox="0 0 $2 $3"');
 
 	return E('div', { 'class': 'wrqr-card' }, [
 		E('strong', { 'class': 'wrqr-ssid' }, [ network.ssid ]),

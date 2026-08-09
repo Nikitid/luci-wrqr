@@ -24,7 +24,10 @@ const context = {
 	baseclass: { extend: value => value },
 	common,
 	dom: { content: (target, next) => { replacements++; target.children = next; } },
-	uqr: { renderSVG: value => { qrRenders++; return `<svg>${value}</svg>`; } },
+	uqr: { renderSVG: value => {
+		qrRenders++;
+		return `<svg xmlns="http://www.w3.org/2000/svg" width="148" height="148">${value}</svg>`;
+	} },
 	rpc: { declare: spec => (...args) => { rpcCalls.push([spec.object, spec.method, args]); return Promise.resolve({}); } },
 	L: { resolveDefault: promise => promise },
 	Promise,
@@ -43,6 +46,9 @@ const running = { radio0: { up: true, interfaces: [
 const firstRoot = widget.render([ config, running ]);
 if (replacements !== 1 || qrRenders !== 1)
 	throw new Error('first render did not create exactly one QR snapshot');
+const qrMarkup = firstRoot.children[1].children[0].children[2].children[0].tag;
+if (!qrMarkup.includes('viewBox="0 0 148 148"') || qrMarkup.includes(' width="148"'))
+	throw new Error('QR SVG was not converted to a scalable viewBox');
 
 replacements = 0;
 qrRenders = 0;
