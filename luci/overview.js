@@ -1,5 +1,6 @@
 'use strict';
 'require baseclass';
+'require dom';
 'require rpc';
 'require uqr';
 'require wrqr.shared as common';
@@ -56,7 +57,7 @@ function sync(networks) {
 		return;
 
 	lastFingerprint = nextFingerprint;
-	grid.replaceChildren.apply(grid, networks.length ? networks.map(card) : [
+	dom.content(grid, networks.length ? networks.map(card) : [
 		E('p', { 'class': 'wrqr-empty' }, [ 'No active Wi-Fi access points.' ])
 	]);
 }

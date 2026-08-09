@@ -8,11 +8,7 @@ let qrRenders = 0;
 
 function node(tag, attrs, children) {
 	return {
-		tag, attrs: attrs || {}, children: children || [],
-		replaceChildren(...next) {
-			replacements++;
-			this.children = next;
-		}
+		tag, attrs: attrs || {}, children: children || []
 	};
 }
 
@@ -21,12 +17,13 @@ function evaluate(path, context) {
 }
 
 const common = evaluate('luci/shared.js', {
-	baseclass: { extend: value => value }, TextEncoder
+	baseclass: { extend: value => value }, encodeURIComponent
 });
 const rpcCalls = [];
 const context = {
 	baseclass: { extend: value => value },
 	common,
+	dom: { content: (target, next) => { replacements++; target.children = next; } },
 	uqr: { renderSVG: value => { qrRenders++; return `<svg>${value}</svg>`; } },
 	rpc: { declare: spec => (...args) => { rpcCalls.push([spec.object, spec.method, args]); return Promise.resolve({}); } },
 	L: { resolveDefault: promise => promise },

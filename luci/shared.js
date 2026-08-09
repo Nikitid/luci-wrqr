@@ -6,8 +6,20 @@ function enabled(value) {
 }
 
 function percentEncode(value) {
-	var bytes = new TextEncoder().encode(String(value));
+	var encoded = encodeURIComponent(String(value));
+	var bytes = [];
 	var output = '';
+	var offset;
+
+	for (offset = 0; offset < encoded.length; offset++) {
+		if (encoded.charAt(offset) === '%') {
+			bytes.push(parseInt(encoded.substr(offset + 1, 2), 16));
+			offset += 2;
+		}
+		else {
+			bytes.push(encoded.charCodeAt(offset));
+		}
+	}
 
 	for (var i = 0; i < bytes.length; i++) {
 		var byte = bytes[i];

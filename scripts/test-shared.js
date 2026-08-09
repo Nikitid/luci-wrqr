@@ -6,7 +6,7 @@ const vm = require('vm');
 function load(path) {
 	return vm.runInNewContext(`(function(){${fs.readFileSync(path, 'utf8')}\n})()`, {
 		baseclass: { extend: value => value },
-		TextEncoder
+		encodeURIComponent
 	});
 }
 
