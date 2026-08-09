@@ -3,7 +3,7 @@
 		"description": "Read active Wi-Fi access points for the Status Overview QR widget",
 		"read": {
 			"ubus": {
-				"network.wireless": [ "status" ],
+				"luci-rpc": [ "getWirelessDevices" ],
 				"uci": [ "get" ]
 			},
 			"uci": [ "wireless" ]

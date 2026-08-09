@@ -13,8 +13,8 @@ var callWirelessConfig = rpc.declare({
 });
 
 var callWirelessStatus = rpc.declare({
-	object: 'network.wireless',
-	method: 'status',
+	object: 'luci-rpc',
+	method: 'getWirelessDevices',
 	expect: {}
 });
 

@@ -59,7 +59,7 @@ if (replacements !== 1)
 
 widget.load().then(() => {
 	if (JSON.stringify(rpcCalls.map(call => call.slice(0, 2))) !==
-	    JSON.stringify([ [ 'uci', 'get' ], [ 'network.wireless', 'status' ] ]))
+	    JSON.stringify([ [ 'uci', 'get' ], [ 'luci-rpc', 'getWirelessDevices' ] ]))
 		throw new Error('load did not refresh configuration and runtime state');
 	console.log('overview UI tests OK');
 }).catch(error => {
