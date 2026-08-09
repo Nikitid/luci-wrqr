@@ -78,7 +78,15 @@ return baseclass.extend({
 			root = E('div', { 'class': 'wrqr-root' }, [ styles(), grid ]);
 		}
 
-		sync(common.collect(data[0], data[1]));
+		try {
+			sync(common.collect(data && data[0], data && data[1]));
+		}
+		catch (error) {
+			lastFingerprint = null;
+			dom.content(grid, E('p', { 'class': 'wrqr-empty' }, [
+				'Wi-Fi QR unavailable: ' + (error && error.message ? error.message : error)
+			]));
+		}
 		return root;
 	}
 });
