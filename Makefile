@@ -32,7 +32,7 @@ define Package/luci-app-wrqr/install
 	$(INSTALL_DATA) ./luci/shared.js $(1)/www/luci-static/resources/wrqr/shared.js
 
 	$(INSTALL_DIR) $(1)/www/luci-static/resources/view/status/include
-	$(INSTALL_DATA) ./luci/overview.js $(1)/www/luci-static/resources/view/status/include/15_wrqr.js
+	$(INSTALL_DATA) ./luci/overview.js $(1)/www/luci-static/resources/view/status/include/15_wifi-qr.js
 
 	$(INSTALL_DIR) $(1)/usr/share/licenses/luci-app-wrqr
 	$(INSTALL_DATA) ./LICENSE $(1)/usr/share/licenses/luci-app-wrqr/LICENSE

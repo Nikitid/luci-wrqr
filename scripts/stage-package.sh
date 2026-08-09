@@ -10,7 +10,7 @@ mkdir -p "$stage/CONTROL" "$stage/usr/share/rpcd/acl.d" \
   "$stage/www/luci-static/resources/view/status/include"
 install -m 644 "$root/luci/acl.json" "$stage/usr/share/rpcd/acl.d/$PKG_NAME.json"
 install -m 644 "$root/luci/shared.js" "$stage/www/luci-static/resources/wrqr/shared.js"
-install -m 644 "$root/luci/overview.js" "$stage/www/luci-static/resources/view/status/include/15_wrqr.js"
+install -m 644 "$root/luci/overview.js" "$stage/www/luci-static/resources/view/status/include/15_wifi-qr.js"
 install -m 644 "$root/LICENSE" "$stage/usr/share/licenses/$PKG_NAME/LICENSE"
 cat >"$stage/CONTROL/control" <<EOF
 Package: $PKG_NAME
