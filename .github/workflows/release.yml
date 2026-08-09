@@ -1,0 +1,77 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: read
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0
+      - uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e
+        with:
+          node-version: "22"
+      - uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405
+        with:
+          python-version: "3.12"
+      - name: Verify release tag
+        run: ./scripts/check-release-tag.sh "$GITHUB_REF_NAME"
+      - name: Validate and build IPK
+        run: ./scripts/ci-check.sh
+      - name: Install SDK dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install --yes --no-install-recommends \
+            build-essential file gawk gettext libncurses-dev libssl-dev \
+            rsync unzip zlib1g-dev zstd
+      - name: Download verified OpenWrt 25.12 SDK
+        run: |
+          . ./apk-feed.env
+          mkdir -p build
+          curl --fail --location --silent --show-error \
+            "https://downloads.openwrt.org/releases/${OPENWRT_APK_VERSION}/targets/${OPENWRT_APK_TARGET}/${OPENWRT_APK_SDK_ARCHIVE}" \
+            --output "build/${OPENWRT_APK_SDK_ARCHIVE}"
+          printf '%s  %s\n' "$OPENWRT_APK_SDK_SHA256" "build/$OPENWRT_APK_SDK_ARCHIVE" | sha256sum --check
+          tar --use-compress-program=unzstd -xf "build/$OPENWRT_APK_SDK_ARCHIVE" -C build
+      - name: Prepare shared signing key
+        env:
+          SIGNING_KEY: ${{ secrets.OPENWRT_APK_SIGNING_KEY }}
+        run: |
+          test -n "$SIGNING_KEY"
+          umask 077
+          printf '%s\n' "$SIGNING_KEY" >/tmp/wrqr-release.pem
+      - name: Build signed APK
+        run: |
+          . ./apk-feed.env
+          OPENWRT_SDK_DIR="$PWD/build/${OPENWRT_APK_SDK_ARCHIVE%.tar.zst}" \
+          OPENWRT_APK_SIGNING_KEY=/tmp/wrqr-release.pem \
+            ./scripts/build-apk-release.sh
+      - name: Remove signing key
+        if: ${{ always() }}
+        run: rm -f /tmp/wrqr-release.pem
+      - name: Publish release
+        uses: softprops/action-gh-release@718ea10b132b3b2eba29c1007bb80653f286566b
+        with:
+          generate_release_notes: true
+          files: |
+            dist/*.ipk
+            dist/SHA256SUMS
+            dist/apk/*
+      - name: Notify shared feed
+        continue-on-error: true
+        env:
+          GH_TOKEN: ${{ secrets.OPENWRT_FEED_DISPATCH_TOKEN }}
+        run: |
+          [ -n "${GH_TOKEN:-}" ] || exit 0
+          . ./apk-feed.env
+          gh api "repos/$OPENWRT_FEED_REPOSITORY/dispatches" --method POST \
+            --field event_type=member-release \
+            --field "client_payload[repository]=$GITHUB_REPOSITORY" \
+            --field "client_payload[tag]=$GITHUB_REF_NAME"
