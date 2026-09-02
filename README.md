@@ -1,27 +1,35 @@
 # luci-wrqr
 
-`luci-app-wrqr` adds a Wi-Fi QR widget to LuCI **Status → Overview**. It shows
-one QR code for each distinct, active access-point configuration and merges
-identical networks broadcast by multiple radios.
+[English](README.en.md)
 
-The widget reads fresh UCI and wireless runtime state on LuCI's normal status
-poll. It does not restart Wi-Fi, rpcd, uhttpd or the router. Unsupported,
-disabled and non-AP wireless interfaces are omitted.
+`luci-app-wrqr` добавляет виджет с QR-кодом Wi-Fi на страницу LuCI
+**Status → Overview**. Показывает по одному коду на каждую различающуюся
+активную точку доступа и объединяет одинаковые сети, вещаемые несколькими
+радиомодулями.
 
-## Compatibility
+Виджет читает свежее состояние UCI и беспроводного стека на обычном опросе
+статуса LuCI. Он ничего не перезапускает — ни Wi-Fi, ни rpcd, ни uhttpd, ни
+роутер. Неподдерживаемые, отключённые и не-AP интерфейсы пропускаются.
 
-- OpenWrt 24.10: install the release IPK with `opkg`.
-- OpenWrt 25.12: install the release APK from the shared Nikitid feed.
+## Совместимость
 
-## Local checks
+- OpenWrt 24.10: установка релизного IPK через `opkg`.
+- OpenWrt 25.12: установка релизного APK из общего фида Nikitid.
+
+## Локальные проверки
 
 ```sh
 ./scripts/ci-check.sh
 ```
 
-Build an OpenWrt 25 APK with a compatible SDK:
+Сборка APK для OpenWrt 25 совместимым SDK:
 
 ```sh
 OPENWRT_SDK_DIR=/path/to/openwrt-sdk-25.12.5-mediatek-filogic \
   ./scripts/build-apk.sh
 ```
+
+## Документация
+
+- [Карта репозитория](docs/MAP.md) — где что лежит
+- [Правила работы](AGENTS.md)

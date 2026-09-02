@@ -8,8 +8,8 @@ poll and restarts nothing.
 
 ## Start of Work
 
-- The whole application is `luci/overview.js` and `luci/shared.js`; neither is
-  large enough to need a map. Read them.
+- Read `docs/MAP.md` first. The whole application is `luci/overview.js` and
+  `luci/shared.js`; neither is large enough to need a generated index.
 - Read the sibling OpenWrt repositories' `docs/TRAPS.md` before changing LuCI
   code. The resource-cache, ACL-path and CSS-specificity traps recorded there
   apply here too, and this repository has not been audited against them.
